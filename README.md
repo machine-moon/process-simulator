@@ -43,9 +43,6 @@ make clean
 
 ## Assumptions and Design Decisions
 
-### Initial Approach
-Initially, I created a template struct for the init process that would fork itself and start simulating traces. However, Brightspace instructions indicated the trace.txt file should include the init process.
-
 ### Challenge with init in trace.txt
 Including init in trace.txt raised questions:
 - How would init self-replicate without creating a loop?
@@ -54,16 +51,15 @@ Including init in trace.txt raised questions:
 ### Chosen Design
 My simulator starts with empty memory; exec assigns init to the correct partition and labels it. Tests specify that init should already be running when `./sim` starts, implying it should be forked and executed by the simulator. The ambiguity on whether the simulator or trace.txt should initialize init is trivial in implementation but impacts clarity and design consistency.
 
-### Submission and Testing
-The Brightspace submission list had typos and updates post-reading week. I aligned the design with the testing framework and the instructions as understood. The difference:
+The difference:
 - **Simulator (OS-Handled)**: Calls fork, followed by exec, invoking the simulator.
 - **Trace.txt (User-Handled)**: Calls the simulator directly, which then forks and execs init.
 
 ### Alternate Method
-To shift initialization responsibility to trace.txt, comment out the fork, save_system_status, and exec lines, uncomment process_trace, along with loading trace, and recompile with `make`. This approach would require an extra file not specified on Brightspace.
+To shift initialization responsibility to trace.txt, comment out the fork, save_system_status, and exec lines, uncomment process_trace, along with loading trace, and recompile with `make`. This approach would require an extra file.
 
 ### External Programs
-Based on examples, I am assuming sizes relative to:
+Based on examples, I am assuming memory sizes relative to:
   - **COMMAND:    time:size**
   - **cpu_size**:   100:10
   - **syscall**:    125:15
